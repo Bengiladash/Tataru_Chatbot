@@ -1,4 +1,4 @@
-#Tatru_Chatbot, developed by Benjamin J. Garcia on 6/28/2024, inspired from https://www.youtube.com/watch?v=N_OOfkEWcOk&t=71s
+#Tataru_Chatbot, developed by Benjamin J. Garcia on 6/28/2024, inspired from https://www.youtube.com/watch?v=N_OOfkEWcOk&t=71s
 
 The purpose of this program is to act as an AI assistant that helps users navigate and access the CSUSB knowledge database https://www.csusb.edu/its/support/it-knowledge-base and all of its information. The chatbot is desigend to only help with information included
 in this database and cannot help with anything else out of that context.
