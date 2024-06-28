@@ -10,19 +10,6 @@ from langchain_community.vectorstores import FAISS
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
-def write_ssh_key():
-    ssh_key = st.secrets["SSH_KEY"]
-    ssh_key_path = os.path.expanduser("~/.ssh/id_rsa")
-
-    os.makedirs(os.path.dirname(ssh_key_path), exist_ok=True)
-
-    with open(ssh_key_path, "w") as f:
-        f.write(ssh_key)
-    
-    os.chmod(ssh_key_path, 0o600)
-
-    subprocess.run(["ssh-agent", "-s"], check=True)
-    subprocess.run(["ssh-add", ssh_key_path], check=True)
 
 def update_feedback(feedback_type):
     feedback_data = {
@@ -50,25 +37,7 @@ def update_feedback(feedback_type):
     with open(feedback_file, "w") as f:
         json.dump(feedback_log, f, indent=4)
 
-    # Commit changes to GitHub
-    commit_changes_to_github(feedback_file)
 
-def commit_changes_to_github(file_path):
-    repo_dir = os.path.dirname(file_path)
-    os.chdir(repo_dir)
-
-    commands = [
-        "git add .",
-        f'git commit -m "Update feedback file: {file_path}"',
-        "git push"
-    ]
-
-    for command in commands:
-        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        out, err = process.communicate()
-        if process.returncode != 0:
-            st.error(f"Command failed: {command}\nError: {err.decode('utf-8')}")
-            break
 
 st.set_page_config(layout="wide")
 
@@ -80,9 +49,6 @@ if not os.path.exists(DOCS_DIR):
 vector_store_path = "vectorstore.pkl"
 positive_feedback_path = "positive_feedback.json"
 negative_feedback_path = "negative_feedback.json"
-
-# Write SSH key from secrets
-write_ssh_key()
 
 # Sidebar: Document Upload Section
 with st.sidebar:
