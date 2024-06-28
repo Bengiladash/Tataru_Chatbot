@@ -1,12 +1,37 @@
 import streamlit as st
 import os
 import pickle
+import json
 from langchain_nvidia_ai_endpoints import ChatNVIDIA, NVIDIAEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.document_loaders import DirectoryLoader
 from langchain_community.vectorstores import FAISS
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
+
+
+def update_feedback(feedback_type):
+    feedback_data = {
+        "user_input": st.session_state.messages[-2]["content"],  # Get the user input
+        "context": st.session_state.context,  # Get the context
+        "response": st.session_state.messages[-1]["content"],  # Get the assistant's response
+        "feedback": feedback_type
+    }
+
+    feedback_file = f'{feedback_type}_feedback.json'
+
+    if not os.path.exists(feedback_file):
+        with open(feedback_file, "w") as f:
+            json.dump([], f)
+
+    with open(feedback_file, "r") as f:
+        feedback_log = json.load(f)
+
+    feedback_log.append(feedback_data)
+
+    with open(feedback_file, "w") as f:
+        json.dump(feedback_log, f, indent=4)
+
 
 st.set_page_config(layout="wide")
 
@@ -16,6 +41,8 @@ if not os.path.exists(DOCS_DIR):
     os.makedirs(DOCS_DIR)
 
 vector_store_path = "vectorstore.pkl"
+positive_feedback_path = "positive_feedback.json"
+negative_feedback_path = "negative_feedback.json"
 
 # Sidebar: Document Upload Section
 with st.sidebar:
@@ -73,13 +100,16 @@ st.subheader("Chat with your AI Assistant, Tataru!")
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
+if "feedback" not in st.session_state:
+    st.session_state.feedback = []
+
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
 prompt_template = ChatPromptTemplate.from_messages(
     [("system",
-      "You are a helpful AI assistant who works for CSUSB, your purpose is to provide information from CSUSB's knowledge database, your name is Tataru are you have a cheery yet proffesional personality. You will reply to questions only based on the context that you are provided. If something is out of context, you will refrain from replying and politely decline to respond to the user. You will provide any relevant hyperlinks corresponding to any information you give if one exists, the hyperlink can only come from the custom data given to you. You will also provide a hyperlink to where you obtained your information from."),
+      "You are a helpful AI assistant who works for CSUSB, your purpose is to provide information from CSUSB's knowledge database, your name is Tataru and you have a cheery yet professional personality. You will reply to questions only based on the context that you are provided. If something is out of context, you will refrain from replying and politely decline to respond to the user. You will provide any relevant hyperlinks corresponding to any information you give if one exists, the hyperlink can only come from the custom data given to you. You will also provide a hyperlink to where you obtained your information from."),
      ("user", "{input}")]
 )
 
@@ -110,13 +140,11 @@ if user_input and vectorstore is not None:
         message_placeholder.markdown(full_response)
 
     st.session_state.messages.append({"role": "assistant", "content": full_response})
+    st.session_state.context = context  # Save the context for feedback
 
     # Feedback buttons
     feedback_col = st.columns([1])[0]
-    with feedback_col:
-        if st.button("👍", key=f"thumbs_up_{len(st.session_state.messages)}"):
-            st.session_state.messages[-1]["feedback"] = "positive"
-            st.toast("Thanks for your feedback!", icon="👍")
-        if st.button("👎", key=f"thumbs_down_{len(st.session_state.messages)}"):
-            st.session_state.messages[-1]["feedback"] = "negative"
-            st.toast("Sorry to hear that. We'll use your feedback to improve!", icon="👎")
+    feedback_col.button("👍", key=f"thumbs_up_{len(st.session_state.messages)}",
+                        on_click=lambda: update_feedback('positive'))
+    feedback_col.button("👎", key=f"thumbs_down_{len(st.session_state.messages)}",
+                        on_click=lambda: update_feedback('negative'))
