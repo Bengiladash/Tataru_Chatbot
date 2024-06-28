@@ -21,7 +21,7 @@ def setup_ssh():
     with open(os.path.join(ssh_path, "id_rsa"), "w") as f:
         f.write(ssh_key)
     os.chmod(os.path.join(ssh_path, "id_rsa"), 0o600)
-    subprocess.run(["ssh-keyscan", "github.com"], stdout=open(os.path.join(ssh_path, "known_hosts"), "w"))
+    subprocess.run(["ssh-keyscan", "https://github.com/Bengiladash/Tataru_Chatbot/tree/master"], stdout=open(os.path.join(ssh_path, "known_hosts"), "w"))
 
 def update_feedback(feedback_type):
     feedback_data = {
