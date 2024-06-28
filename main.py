@@ -10,6 +10,15 @@ from langchain_community.vectorstores import FAISS
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
+def setup_ssh():
+    ssh_key = st.secrets["GITHUB_SSH_KEY"]
+    ssh_path = os.path.expanduser("~/.ssh")
+    os.makedirs(ssh_path, exist_ok=True)
+    with open(os.path.join(ssh_path, "id_rsa"), "w") as f:
+        f.write(ssh_key)
+    os.chmod(os.path.join(ssh_path, "id_rsa"), 0o600)
+    subprocess.run(["ssh-keyscan", "github.com"], stdout=open(os.path.join(ssh_path, "known_hosts"), "w"))
+
 def update_feedback(feedback_type):
     feedback_data = {
         "user_input": st.session_state.messages[-2]["content"],  # Get the user input
@@ -55,6 +64,9 @@ if not os.path.exists(DOCS_DIR):
 vector_store_path = "vectorstore.pkl"
 positive_feedback_path = "positive_feedback.json"
 negative_feedback_path = "negative_feedback.json"
+
+# Setup SSH for GitHub
+setup_ssh()
 
 # Sidebar: Document Upload Section
 with st.sidebar:
