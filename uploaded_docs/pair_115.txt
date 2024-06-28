@@ -1,0 +1,1 @@
+https://www.csusb.edu/its/support/it-knowledge-base/detail?id=948b8228094c67c97e387940ffb884d44c5eccb7ce Remove account in Mail for iOS (non mobile device) Remove account in Mail for iOS (non mobile device) In the Mail app on your Mac, choose Mail > Preferences, then click Accounts. Select an account, then click the Remove (minus) button

@@ -1,0 +1,1 @@
+https://www.csusb.edu/its/support/it-knowledge-base/detail?id=949361d22cf19f9e0403104b55a11ddcc5a2aca3f4 Text macros Unexpected error Message - Point N Click issue happens when they create a Macros but leave it blank. Needs to be deleted then it should work properly.

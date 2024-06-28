@@ -1,0 +1,1 @@
+https://www.csusb.edu/its/support/it-knowledge-base/detail?id=9469d2ff04cefd6b26884e4edb859341c23c7ea1cb Cisco Finesse - How to make a call Cisco Finesse – How to Make a Call Ensure your status is set to Not Ready (or Not Ready with the appropriate reason code). Click Make a New Call. Enter the number you want to call into the dial pad Click Call.

@@ -1,0 +1,1 @@
+https://www.csusb.edu/its/support/it-knowledge-base/detail?id=94598cec2084f169f4d4b048e3b0a1679d70eac921 Set User Preferences in PeopleSoft via myCoyote Step 1. Login to myCoyote portal Step 2. Once you are logged in click the My Personal Information tile then select the User Preferences tile to open Step 3. The Self-Service page will open, proceed to set your User Preferences.

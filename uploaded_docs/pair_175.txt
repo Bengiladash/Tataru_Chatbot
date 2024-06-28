@@ -1,0 +1,1 @@
+https://www.csusb.edu/its/support/it-knowledge-base/detail?id=946d9410956b07d35185dd4fc4aab4bb534f200d40 How to Combine PDF Files Step 1 Open Adobe Acrobat DC > Open File Step 2 Select More Tools Step 3 Combine Files > Open additional files to be included Step 4 Combine and Save (please note: files can be rearranged any order)

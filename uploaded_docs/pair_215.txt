@@ -1,0 +1,1 @@
+https://www.csusb.edu/its/support/it-knowledge-base/detail?id=9459b32035956b2853014840648c6f030694605e00 I would prefer to see only one digest a week, or one digest a month. Is that possible to configure on my own? At present the Proofpoint system does not have a way for individuals to set a digest schedule. It is a system wide setting.

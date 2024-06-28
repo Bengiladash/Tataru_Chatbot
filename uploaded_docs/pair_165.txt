@@ -1,0 +1,1 @@
+https://www.csusb.edu/its/support/it-knowledge-base/detail?id=946741b4d612908a867fd64a3d8735a491adeadf81 Clearing Cache and Cookies in Opera Press Ctrl+H to open your history page. Click Clear browsing data in the top-right corner. Select what you want to delete and the time range, like recent history or all time. Click Clear data.

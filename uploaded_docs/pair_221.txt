@@ -1,0 +1,1 @@
+https://www.csusb.edu/its/support/it-knowledge-base/detail?id=9469d2dede10491147d49f44bdb6859520c9c6d9b3 Cisco Finesse - How to change your state from Ready to Not Ready How to Change your State in Cisco Finesse Click the drop-down arrow beside your current state. Select the appropriate state from the list.
