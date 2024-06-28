@@ -10,6 +10,10 @@ from langchain_community.vectorstores import FAISS
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
+def setup_git_config():
+    subprocess.run(['git', 'config', '--global', 'user.email', "XbenlordX@hotmail.com"], check=True)
+    subprocess.run(['git', 'config', '--global', 'user.name', "Benjamin Garcia"], check=True)
+
 def setup_ssh():
     ssh_key = st.secrets["GITHUB_SSH_KEY"]
     ssh_path = os.path.expanduser("~/.ssh")
@@ -48,7 +52,11 @@ def update_feedback(feedback_type):
     # Add, commit, and push the changes to GitHub
     try:
         subprocess.run(['git', 'add', feedback_file], check=True)
-        subprocess.run(['git', 'commit', '-m', f'Update {feedback_type} feedback'], check=True)
+        commit_message = f'Update {feedback_type} feedback'
+        result = subprocess.run(['git', 'commit', '-m', commit_message], capture_output=True, text=True)
+        if result.returncode != 0:
+            st.error(f"Git commit failed: {result.stderr}")
+            return
         subprocess.run(['git', 'push'], check=True)
         st.success(f"{feedback_type.capitalize()} feedback updated and pushed to GitHub successfully.")
     except subprocess.CalledProcessError as e:
@@ -66,6 +74,7 @@ positive_feedback_path = "positive_feedback.json"
 negative_feedback_path = "negative_feedback.json"
 
 # Setup SSH for GitHub
+setup_git_config()
 setup_ssh()
 
 # Sidebar: Document Upload Section
