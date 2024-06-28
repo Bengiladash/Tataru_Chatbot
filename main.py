@@ -37,14 +37,6 @@ def update_feedback(feedback_type):
     with open(feedback_file, "w") as f:
         json.dump(feedback_log, f, indent=4)
 
-    # Add, commit, and push the changes to GitHub
-    try:
-        subprocess.run(['git', 'add', feedback_file], check=True)
-        subprocess.run(['git', 'commit', '-m', f'Update {feedback_type} feedback'], check=True)
-        subprocess.run(['git', 'push'], check=True)
-        st.success(f"{feedback_type.capitalize()} feedback updated and pushed to GitHub successfully.")
-    except subprocess.CalledProcessError as e:
-        st.error(f"An error occurred while pushing changes to GitHub: {e}")
 
 
 st.set_page_config(layout="wide")
