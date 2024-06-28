@@ -2,13 +2,13 @@ import streamlit as st
 import os
 import pickle
 import json
+import subprocess
 from langchain_nvidia_ai_endpoints import ChatNVIDIA, NVIDIAEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.document_loaders import DirectoryLoader
 from langchain_community.vectorstores import FAISS
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
-
 
 def update_feedback(feedback_type):
     feedback_data = {
@@ -20,18 +20,30 @@ def update_feedback(feedback_type):
 
     feedback_file = f'{feedback_type}_feedback.json'
 
+    # Ensure the feedback file exists and is not empty
     if not os.path.exists(feedback_file):
         with open(feedback_file, "w") as f:
             json.dump([], f)
 
-    with open(feedback_file, "r") as f:
-        feedback_log = json.load(f)
+    try:
+        with open(feedback_file, "r") as f:
+            feedback_log = json.load(f)
+    except json.JSONDecodeError:
+        feedback_log = []
 
     feedback_log.append(feedback_data)
 
     with open(feedback_file, "w") as f:
         json.dump(feedback_log, f, indent=4)
-
+    
+    # Add, commit, and push the changes to GitHub
+    try:
+        subprocess.run(['git', 'add', feedback_file], check=True)
+        subprocess.run(['git', 'commit', '-m', f'Update {feedback_type} feedback'], check=True)
+        subprocess.run(['git', 'push'], check=True)
+        st.success(f"{feedback_type.capitalize()} feedback updated and pushed to GitHub successfully.")
+    except subprocess.CalledProcessError as e:
+        st.error(f"An error occurred while pushing changes to GitHub: {e}")
 
 st.set_page_config(layout="wide")
 
