@@ -10,18 +10,6 @@ from langchain_community.vectorstores import FAISS
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
-def setup_git_config():
-    subprocess.run(['git', 'config', '--global', 'user.email', "XbenlordX@hotmail.com"], check=True)
-    subprocess.run(['git', 'config', '--global', 'user.name', "Benjamin Garcia"], check=True)
-
-def setup_ssh():
-    ssh_key = st.secrets["GITHUB_SSH_KEY"]
-    ssh_path = os.path.expanduser("~/.ssh")
-    os.makedirs(ssh_path, exist_ok=True)
-    with open(os.path.join(ssh_path, "id_rsa"), "w") as f:
-        f.write(ssh_key)
-    os.chmod(os.path.join(ssh_path, "id_rsa"), 0o600)
-    subprocess.run(["ssh-keyscan", "https://github.com/Bengiladash/Tataru_Chatbot.git"], stdout=open(os.path.join(ssh_path, "known_hosts"), "w"))
 
 def update_feedback(feedback_type):
     feedback_data = {
@@ -48,19 +36,16 @@ def update_feedback(feedback_type):
 
     with open(feedback_file, "w") as f:
         json.dump(feedback_log, f, indent=4)
-    
+
     # Add, commit, and push the changes to GitHub
     try:
         subprocess.run(['git', 'add', feedback_file], check=True)
-        commit_message = f'Update {feedback_type} feedback'
-        result = subprocess.run(['git', 'commit', '-m', commit_message], capture_output=True, text=True)
-        if result.returncode != 0:
-            st.error(f"Git commit failed: {result.stderr}")
-            return
+        subprocess.run(['git', 'commit', '-m', f'Update {feedback_type} feedback'], check=True)
         subprocess.run(['git', 'push'], check=True)
         st.success(f"{feedback_type.capitalize()} feedback updated and pushed to GitHub successfully.")
     except subprocess.CalledProcessError as e:
         st.error(f"An error occurred while pushing changes to GitHub: {e}")
+
 
 st.set_page_config(layout="wide")
 
@@ -72,10 +57,6 @@ if not os.path.exists(DOCS_DIR):
 vector_store_path = "vectorstore.pkl"
 positive_feedback_path = "positive_feedback.json"
 negative_feedback_path = "negative_feedback.json"
-
-# Setup SSH for GitHub
-setup_git_config()
-setup_ssh()
 
 # Sidebar: Document Upload Section
 with st.sidebar:
